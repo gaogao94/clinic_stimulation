@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>牙科诊所模拟系统 - 结果明细</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>牙科诊所模拟系统</h1>
+            <nav>
+                <a href="/">参数控制</a>
+                <a href="/detail" class="active">结果明细</a>
+                <a href="/summary">结果总结</a>
+            </nav>
+        </header>
+        
+        <main>
+            <section class="detail-panel">
+                <h2>结果明细</h2>
+                
+                <div class="control-tabs">
+                    <button class="tab-btn active" data-type="patient">患者明细</button>
+                    <button class="tab-btn" data-type="daily">每日数据</button>
+                    <button class="tab-btn" data-type="weekly">每周数据</button>
+                    <button class="tab-btn" data-type="monthly">月度数据</button>
+                    <button id="refresh-btn" class="btn btn-secondary">刷新数据</button>
+                </div>
+                
+                <div class="filter-section">
+                    <div class="filter-group">
+                        <label for="filter-month">月数:</label>
+                        <select id="filter-month">
+                            <option value="all">全部</option>
+                            <!-- 选项将通过JavaScript动态生成 -->
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="filter-week">周数:</label>
+                        <select id="filter-week">
+                            <option value="all">全部</option>
+                            <!-- 选项将通过JavaScript动态生成 -->
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="filter-day">日期:</label>
+                        <select id="filter-day">
+                            <option value="all">全部</option>
+                            <!-- 选项将通过JavaScript动态生成 -->
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="data-table-container">
+                    <table id="result-table" class="data-table">
+                        <thead>
+                            <!-- 表头将通过JavaScript动态生成 -->
+                        </thead>
+                        <tbody id="result-table-body">
+                            <!-- 数据行将通过JavaScript动态生成 -->
+                        </tbody>
+                    </table>
+                </div>
+                <!-- 分页控件将通过JavaScript动态生成 -->
+            </section>
+        </main>
+        
+        <footer>
+            <p>&copy; 2026 牙科诊所模拟系统</p>
+        </footer>
+    </div>
+    
+    <script src="{{ url_for('static', filename='js/detail.js') }}"></script>
+</body>
+</html>

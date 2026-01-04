@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>牙科诊所模拟系统 - 结果总结</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>牙科诊所模拟系统</h1>
+            <nav>
+                <a href="/">参数控制</a>
+                <a href="/detail">结果明细</a>
+                <a href="/summary" class="active">结果总结</a>
+            </nav>
+        </header>
+        
+        <main>
+            <section class="summary-panel">
+                <h2>结果总结</h2>
+                
+                <div class="summary-stats">
+                    <div class="stat-card">
+                        <h3>模拟周数</h3>
+                        <p id="stat-weeks">0</p>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <h3>总客户数</h3>
+                        <p id="stat-customers">0</p>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <h3>最终会员数</h3>
+                        <p id="stat-members">0</p>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <h3>总营收</h3>
+                        <p id="stat-revenue">0.00</p>
+                        <span class="unit">元</span>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <h3>总利润</h3>
+                        <p id="stat-profit">0.00</p>
+                        <span class="unit">元</span>
+                    </div>
+                </div>
+                
+                <div class="chart-section">
+                    <h3>关键指标趋势</h3>
+                    
+                    <div class="chart-controls">
+                        <button class="chart-btn active" data-chart="revenue">营收趋势</button>
+                        <button class="chart-btn" data-chart="cash">现金余额趋势</button>
+                        <button class="chart-btn" data-chart="cashflow">现金流含成本支出趋势</button>
+                        <button class="chart-btn" data-chart="cashinflow">现金流入趋势</button>
+                        <button class="chart-btn" data-chart="members">会员趋势</button>
+                        <button id="refresh-chart" class="btn btn-secondary">刷新图表</button>
+                    </div>
+                    
+                    <div class="chart-container">
+                        <canvas id="trend-chart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="chart-section">
+                    <h3>当月现金流与总成本对比</h3>
+                    <div class="chart-container">
+                        <canvas id="cashflow-cost-chart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="chart-section">
+                    <h3>现金投入与总营收累计对比</h3>
+                    <div class="chart-container">
+                        <canvas id="investment-revenue-chart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="chart-section">
+                    <h3>老店与纯新现金流对比</h3>
+                    <div class="chart-container">
+                        <canvas id="old-new-cashflow-chart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="analysis-section">
+                    <h3>经营状况分析</h3>
+                    
+                    <div class="analysis-card" id="analysis-card">
+                        <h4>经营状态</h4>
+                        <p id="analysis-status">模拟尚未开始</p>
+                        
+                        <h4>关键发现</h4>
+                        <ul id="analysis-findings">
+                            <li>请开始模拟以查看分析结果</li>
+                        </ul>
+                        
+                        <h4>建议</h4>
+                        <ul id="analysis-recommendations">
+                            <li>通过参数控制页调整模拟参数</li>
+                            <li>按周运行模拟，观察结果变化</li>
+                        </ul>
+                        
+                        <h4>平均年回报率</h4>
+                        <p id="avg-annual-return">0.00%</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+        
+        <footer>
+            <p>&copy; 2026 牙科诊所模拟系统</p>
+        </footer>
+    </div>
+    
+    <script src="{{ url_for('static', filename='js/summary.js') }}"></script>
+</body>
+</html>

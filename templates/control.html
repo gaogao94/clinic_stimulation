@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>牙科诊所模拟系统 - 参数控制</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>牙科诊所模拟系统</h1>
+            <nav>
+                <a href="/" class="active">参数控制</a>
+                <a href="/detail">结果明细</a>
+                <a href="/summary">结果总结</a>
+            </nav>
+        </header>
+        
+        <main>
+            <section class="control-panel">
+                <h2>模拟参数设置</h2>
+                
+                <div class="alert" id="alert"></div>
+                                
+                <form id="params-form">
+                    <div class="params-grid">
+                        <!-- 基础设置卡片 -->
+                        <div class="param-card">
+                            <div class="param-card-header">
+                                <h3>🏗️ 基础设置</h3>
+                            </div>
+                            <div class="param-card-body">
+                                <div class="form-row">
+                                    <div class="field-with-unit short-field">
+                                        <div class="label-row">
+                                            <label for="years">模拟时长（年）</label>
+                                        </div>
+                                        <input type="number" id="years" name="years" min="1" max="20" value="10">
+                                    </div>
+                                    
+                                    <div class="field-with-unit short-field">
+                                        <div class="label-row">
+                                            <label for="num_chairs">诊疗椅数量（把）</label>
+                                        </div>
+                                        <input type="number" id="num_chairs" name="num_chairs" min="1" max="20" value="4">
+                                    </div>
+                                </div>
+                                
+                                <div class="form-row">
+                                    <div class="field-with-unit short-field">
+                                        <div class="label-row">
+                                            <label for="invest_decoration">装修投资（元）</label>
+                                        </div>
+                                        <input type="number" id="invest_decoration" name="invest_decoration" min="0" step="1000" value="280000">
+                                    </div>
+                                    
+                                    <div class="field-with-unit short-field">
+                                        <div class="label-row">
+                                            <label for="invest_hardware">设备投资（元）</label>
+                                        </div>
+                                        <input type="number" id="invest_hardware" name="invest_hardware" min="0" step="1000" value="300000">
+                                    </div>
+                                </div>
+                                
+                                <div class="field-with-unit short-field">
+                                    <div class="label-row">
+                                        <label for="pre_opening_investment">开业前期投入（元）</label>
+                                    </div>
+                                    <input type="number" id="pre_opening_investment" name="pre_opening_investment" min="0" step="1000" value="50000">
+                                </div>
+                                
+                                <!-- 房租相关设置 -->
+                                <div class="form-row">
+                                    <div class="field-with-unit short-field">
+                                        <div class="label-row">
+                                            <label for="building_area">建筑面积（平米）</label>
+                                        </div>
+                                        <input type="number" id="building_area" name="building_area" min="0" step="1" value="143" readonly>
+                                    </div>
+                                    
+                                    <div class="field-with-unit short-field">
+                                        <div class="label-row">
+                                            <label for="occupancy_rate">得房率</label>
+                                        </div>
+                                        <input type="number" id="occupancy_rate" name="occupancy_rate" min="0" max="1" step="0.01" value="0.7" readonly>
+                                    </div>
+                                </div>
+                                    
+                                <div class="field-with-unit short-field">
+                                    <div class="label-row">
+                                        <label for="rent_per_sqm_per_day">日租金（元/平米/天）</label>
+                                    </div>
+                                    <input type="number" id="rent_per_sqm_per_day" name="rent_per_sqm_per_day" min="0" step="0.1" value="3.5">
+                                </div>
+                                
+                                <div class="field-with-unit short-field">
+                                    <div class="label-row">
+                                        <label for="calculated_rent">计算每月房租（元）</label>
+                                    </div>
+                                    <input type="number" id="calculated_rent" name="calculated_rent" min="0" step="100" value="63000" readonly>
+                                </div>
+                                <div class="form-row">
+                                    <div class="field-with-unit short-field">
+                                        <div class="label-row">
+                                            <label for="monthly_utilities">每月水电费（元）</label>
+                                        </div>
+                                        <input type="number" id="monthly_utilities" name="monthly_utilities" min="0" step="100" value="2000" readonly>
+                                    </div>
+                                    
+                                    <div class="field-with-unit short-field">
+                                        <div class="label-row">
+                                            <label for="monthly_marketing">每月市场费用（元）</label>
+                                        </div>
+                                        <input type="number" id="monthly_marketing" name="monthly_marketing" min="0" step="1000" value="10000" readonly>
+                                    </div>
+                                </div>
+                                <div class="field-with-unit">
+                                    <div class="label-row">
+                                        <label>诊所类型</label>
+                                    </div>
+                                    <div class="radio-group">
+                                        <label class="radio-option">
+                                            <input type="radio" id="clinic_type_ortho" name="clinic_type" value="ortho" checked>
+                                            <span>做矫正</span>
+                                        </label>
+                                        <label class="radio-option">
+                                            <input type="radio" id="clinic_type_pediatric" name="clinic_type" value="pediatric">
+                                            <span>纯儿牙</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 人员配置卡片 -->
+                        <div class="param-card">
+                            <div class="param-card-header">
+                                <h3>👥 人员配置</h3>
+                            </div>
+                            <div class="param-card-body">
+                                <div class="form-row">
+                                    <div class="field-with-unit short-field">
+                                        <div class="label-row">
+                                            <label for="num_pediatric_doctors">儿牙医生（人）</label>
+                                        </div>
+                                        <input type="number" id="num_pediatric_doctors" name="num_pediatric_doctors" min="0" max="10" value="1">
+                                    </div>
+                                    
+                                    <div class="field-with-unit short-field">
+                                        <div class="label-row">
+                                            <label for="num_ortho_doctors">矫正医生（人）</label>
+                                        </div>
+                                        <input type="number" id="num_ortho_doctors" name="num_ortho_doctors" min="0" max="10" value="0">
+                                    </div>
+                                </div>
+                                
+                                <div class="field-with-unit short-field">
+                                    <div class="label-row">
+                                        <label for="num_nurses">护士（人）</label>
+                                    </div>
+                                    <input type="number" id="num_nurses" name="num_nurses" min="1" max="20" value="4">
+                                </div>
+                                
+                                <div class="form-row">
+                                    <div class="field-with-unit short-field">
+                                        <div class="label-row">
+                                            <label for="doctor_base_salary">医生底薪（元）</label>
+                                        </div>
+                                        <input type="number" id="doctor_base_salary" name="doctor_base_salary" min="0" step="1000" value="10000">
+                                    </div>
+                                    
+                                    <div class="field-with-unit short-field">
+                                        <div class="label-row">
+                                            <label for="doctor_commission_rate">医生提成比例</label>
+                                        </div>
+                                        <input type="number" id="doctor_commission_rate" name="doctor_commission_rate" min="0" max="1" step="0.01" value="0.1">
+                                    </div>
+                                </div>
+                                
+                                <div class="form-row">
+                                    <div class="field-with-unit short-field">
+                                        <div class="label-row">
+                                            <label for="nurse_base_salary">护士底薪（元）</label>
+                                        </div>
+                                        <input type="number" id="nurse_base_salary" name="nurse_base_salary" min="0" step="1000" value="5000">
+                                    </div>
+                                    
+                                    <div class="field-with-unit short-field">
+                                        <div class="label-row">
+                                            <label for="nurse_commission_rate">护士提成比例</label>
+                                        </div>
+                                        <input type="number" id="nurse_commission_rate" name="nurse_commission_rate" min="0" max="1" step="0.01" value="0.03">
+                                    </div>
+                                </div>
+                                
+                                <div class="form-row">
+                                    <div class="field-with-unit short-field">
+                                        <div class="label-row">
+                                            <label for="pediatric_material_ratio">儿牙耗材比例</label>
+                                        </div>
+                                        <input type="number" id="pediatric_material_ratio" name="pediatric_material_ratio" min="0" max="1" step="0.01" value="0.05">
+                                    </div>
+                                    
+                                    <div class="field-with-unit short-field">
+                                        <div class="label-row">
+                                            <label for="ortho_material_ratio">矫正耗材比例</label>
+                                        </div>
+                                        <input type="number" id="ortho_material_ratio" name="ortho_material_ratio" min="0" max="1" step="0.01" value="0.30">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 患者流量卡片 -->
+                        <div class="param-card">
+                            <div class="param-card-header">
+                                <h3>👥 患者流量</h3>
+                            </div>
+                            <div class="param-card-body">
+                                <div class="form-row">
+                                    <div class="field-with-unit short-field">
+                                        <div class="label-row">
+                                            <label for="daily_new_leads_base">每日新客流入（人）</label>
+                                        </div>
+                                        <input type="number" id="daily_new_leads_base" name="daily_new_leads_base" min="0" max="20" step="0.5" value="3">
+                                    </div>
+                                    
+                                    <div class="field-with-unit short-field">
+                                        <div class="label-row">
+                                            <label for="prob_follow_up">老客户复诊率</label>
+                                        </div>
+                                        <input type="number" id="prob_follow_up" name="prob_follow_up" min="0" max="1" step="0.01" value="0.95">
+                                    </div>
+                                </div>
+                                
+                                <div class="form-row">
+                                    <div class="field-with-unit short-field">
+                                        <div class="label-row">
+                                            <label for="initial_members">初始会员数量（人）</label>
+                                        </div>
+                                        <input type="number" id="initial_members" name="initial_members" min="0" step="100" value="400">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 会员卡设置卡片 -->
+                        <div class="param-card">
+                            <div class="param-card-header">
+                                <h3>💳 会员卡设置</h3>
+                            </div>
+                            <div class="param-card-body">
+                                <div class="form-row">
+                                    <div class="field-with-unit short-field">
+                                        <div class="label-row">
+                                            <label for="price_card_1yr">1年卡价格（元）</label>
+                                        </div>
+                                        <input type="number" id="price_card_1yr" name="price_card_1yr" min="0" step="100" value="1000">
+                                    </div>
+                                    
+                                    <div class="field-with-unit short-field">
+                                        <div class="label-row">
+                                            <label for="price_card_5yr">5年卡价格（元）</label>
+                                        </div>
+                                        <input type="number" id="price_card_5yr" name="price_card_5yr" min="0" step="100" value="5000">
+                                    </div>
+                                </div>
+                                
+                                <div class="form-row">
+                                    <div class="field-with-unit short-field">
+                                        <div class="label-row">
+                                            <label for="prob_card_1yr">新客办1年卡概率</label>
+                                        </div>
+                                        <input type="number" id="prob_card_1yr" name="prob_card_1yr" min="0" max="1" step="0.01" value="0.2">
+                                    </div>
+                                    
+                                    <div class="field-with-unit short-field">
+                                        <div class="label-row">
+                                            <label for="prob_card_5yr">新客办5年卡概率</label>
+                                        </div>
+                                        <input type="number" id="prob_card_5yr" name="prob_card_5yr" min="0" max="1" step="0.01" value="0.4">
+                                    </div>
+                                </div>
+                                
+                                <div class="field-with-unit short-field">
+                                    <div class="label-row">
+                                        <label for="card_revenue_recognition_ratio">办卡当日确认营收比例</label>
+                                    </div>
+                                    <input type="number" id="card_revenue_recognition_ratio" name="card_revenue_recognition_ratio" min="0" max="1" step="0.01" value="0.2">
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </form>
+                
+                <div class="action-panel">
+                    <div class="action-buttons">
+                        <button id="reset-btn" class="btn btn-warning">
+                            <span class="btn-icon">🔄</span>
+                            重置模拟
+                        </button>
+                        <button id="next-btn" class="btn btn-primary">
+                            <span class="btn-icon">▶️</span>
+                            运行下一周
+                        </button>
+                    </div>
+                </div>
+            </section>
+        </main>
+        
+        <footer>
+            <p>&copy; 2026 牙科诊所模拟系统</p>
+        </footer>
+    </div>
+    
+    <script src="{{ url_for('static', filename='js/control.js') }}"></script>
+</body>
+</html>

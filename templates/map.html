@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>上海区域地图</title>
+    <!-- 引入高德地图API -->
+    <script type="text/javascript">
+        // 动态加载高德地图API
+        function loadAMapAPI() {
+            return new Promise((resolve, reject) => {
+                if (window.AMap) {
+                    resolve(window.AMap);
+                    return;
+                }
+                
+                const script = document.createElement('script');
+                script.type = 'text/javascript';
+                script.src = 'https://webapi.amap.com/maps?v=2.0&key=131e12f30a06e794a3533d4c60d33326';
+                script.onload = () => resolve(window.AMap);
+                script.onerror = reject;
+                document.head.appendChild(script);
+            });
+        }
+    </script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+        }
+        
+        .container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+        
+        .header {
+            background-color: #fff;
+            padding: 1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header h1 {
+            font-size: 1.5rem;
+            color: #333;
+        }
+        
+        .controls {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .district-selector {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .district-btn {
+            padding: 0.5rem 1rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #fff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .district-btn.active {
+            background-color: #1890ff;
+            color: white;
+            border-color: #1890ff;
+        }
+        
+        .layers-control {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+        
+        .layer-toggle {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+        }
+        
+        .map-container {
+            flex: 1;
+            position: relative;
+        }
+        
+        #map {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .info-panel {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background-color: white;
+            padding: 1rem;
+            border-radius: 4px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            width: 250px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .info-panel h3 {
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            color: #333;
+        }
+        
+        .poi-list {
+            list-style: none;
+        }
+        
+        .poi-item {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+        
+        .poi-item:hover {
+            background-color: #f0f0f0;
+        }
+        
+        .poi-item:last-child {
+            border-bottom: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>上海区域地图</h1>
+            <div class="controls">
+                <div class="district-selector">
+                    <button class="district-btn active" data-district="黄浦区">黄浦区</button>
+                    <button class="district-btn" data-district="徐汇区">徐汇区</button>
+                    <button class="district-btn" data-district="长宁区">长宁区</button>
+                    <button class="district-btn" data-district="静安区">静安区</button>
+                    <button class="district-btn" data-district="普陀区">普陀区</button>
+                    <button class="district-btn" data-district="虹口区">虹口区</button>
+                    <button class="district-btn" data-district="杨浦区">杨浦区</button>
+                    <button class="district-btn" data-district="浦东新区">浦东新区</button>
+                    <button class="district-btn" data-district="闵行区">闵行区</button>
+                    <button class="district-btn" data-district="宝山区">宝山区</button>
+                    <button class="district-btn" data-district="嘉定区">嘉定区</button>
+                    <button class="district-btn" data-district="金山区">金山区</button>
+                    <button class="district-btn" data-district="松江区">松江区</button>
+                    <button class="district-btn" data-district="青浦区">青浦区</button>
+                    <button class="district-btn" data-district="奉贤区">奉贤区</button>
+                    <button class="district-btn" data-district="崇明区">崇明区</button>
+                </div>
+                <div class="layers-control">
+                    <div class="layer-toggle">
+                        <input type="checkbox" id="schools" checked>
+                        <label for="schools">显示学校</label>
+                    </div>
+                    <div class="layer-toggle">
+                        <input type="checkbox" id="communities" checked>
+                        <label for="communities">显示小区</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="map-container">
+            <div id="map"></div>
+            <div class="info-panel">
+                <h3>兴趣点信息</h3>
+                <ul class="poi-list" id="poiList"></ul>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // 上海各区中心点坐标
+        const shanghaiDistricts = {
+            "黄浦区": {center: [121.480541, 31.233567], zoom: 13},
+            "徐汇区": {center: [121.43701, 31.192064], zoom: 12},
+            "长宁区": {center: [121.422814, 31.223644], zoom: 12},
+            "静安区": {center: [121.464907, 31.238854], zoom: 13},
+            "普陀区": {center: [121.426121, 31.234427], zoom: 12},
+            "虹口区": {center: [121.484902, 31.271602], zoom: 13},
+            "杨浦区": {center: [121.51975, 31.260337], zoom: 12},
+            "浦东新区": {center: [121.537176, 31.214604], zoom: 11},
+            "闵行区": {center: [121.387451, 31.115125], zoom: 11},
+            "宝山区": {center: [121.486918, 31.381493], zoom: 11},
+            "嘉定区": {center: [121.241307, 31.394916], zoom: 11},
+            "金山区": {center: [121.337055, 30.746298], zoom: 10},
+            "松江区": {center: [121.232855, 31.03284], zoom: 11},
+            "青浦区": {center: [121.154723, 31.158774], zoom: 11},
+            "奉贤区": {center: [121.464428, 30.919492], zoom: 10},
+            "崇明区": {center: [121.403693, 31.720192], zoom: 9}
+        };
+        
+        // 地图实例
+        let map = null;
+        // POI标记组
+        let schoolMarkers = [];
+        let communityMarkers = [];
+        // 当前显示的兴趣点列表
+        let currentPOIs = [];
+        
+        // 初始化地图
+        function initMap() {
+            // 初始化地图，默认显示黄浦区
+            const defaultDistrict = "黄浦区";
+            const defaultConfig = shanghaiDistricts[defaultDistrict];
+            
+            map = new AMap.Map('map', {
+                zoom: defaultConfig.zoom,
+                center: defaultConfig.center,
+                viewMode: '3D',
+                pitch: 0
+            });
+            
+            // 添加地图控件
+            map.addControl(new AMap.ToolBar());
+            map.addControl(new AMap.Scale());
+            map.addControl(new AMap.MapType());
+            
+            // 加载默认区域的POI
+            loadPOIs(defaultDistrict);
+            
+            // 绑定事件
+            bindEvents();
+        }
+        
+        // 绑定事件
+        function bindEvents() {
+            // 区域切换
+            document.querySelectorAll('.district-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.district-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    const district = this.dataset.district;
+                    switchDistrict(district);
+                });
+            });
+            
+            // 图层控制
+            document.getElementById('schools').addEventListener('change', function() {
+                toggleSchools(this.checked);
+            });
+            
+            document.getElementById('communities').addEventListener('change', function() {
+                toggleCommunities(this.checked);
+            });
+        }
+        
+        // 切换区域
+        function switchDistrict(district) {
+            const districtConfig = shanghaiDistricts[district];
+            if (districtConfig) {
+                // 移动地图到指定区域
+                map.setCenter(districtConfig.center);
+                map.setZoom(districtConfig.zoom);
+                
+                // 清除现有标记
+                clearMarkers();
+                
+                // 加载新区域的POI
+                loadPOIs(district);
+            }
+        }
+        
+        // 加载POI数据
+        function loadPOIs(district) {
+            currentPOIs = [];
+            
+            // 模拟数据 - 在实际应用中，这里应该调用API获取真实数据
+            const mockSchools = [
+                {name: `${district}第一中学`, type: 'school', location: [121.480541, 31.233567]},
+                {name: `${district}第二小学`, type: 'school', location: [121.482541, 31.235567]},
+                {name: `${district}实验学校`, type: 'school', location: [121.478541, 31.231567]}
+            ];
+            
+            const mockCommunities = [
+                {name: `${district}花园小区`, type: 'community', location: [121.485541, 31.234567]},
+                {name: `${district}新村`, type: 'community', location: [121.479541, 31.236567]},
+                {name: `${district}国际社区`, type: 'community', location: [121.481541, 31.232567]}
+            ];
+            
+            // 合并所有POI
+            currentPOIs = [...mockSchools, ...mockCommunities];
+            
+            // 在地图上添加标记
+            addMarkers();
+            
+            // 更新兴趣点列表
+            updatePOIList();
+        }
+        
+        // 添加标记
+        function addMarkers() {
+            const showSchools = document.getElementById('schools').checked;
+            const showCommunities = document.getElementById('communities').checked;
+            
+            currentPOIs.forEach(poi => {
+                const marker = new AMap.Marker({
+                    position: poi.location,
+                    title: poi.name,
+                    content: `<div style="background-color: ${poi.type === 'school' ? '#1890ff' : '#52c41a'}; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px;">${poi.type === 'school' ? '🏫' : '🏘️'} ${poi.name}</div>`,
+                    offset: new AMap.Pixel(-50, -25)
+                });
+                
+                // 添加点击事件
+                marker.on('click', function() {
+                    showPOIDetail(poi);
+                });
+                
+                // 根据类型添加到对应的标记组
+                if (poi.type === 'school') {
+                    schoolMarkers.push(marker);
+                    if (showSchools) {
+                        map.add(marker);
+                    }
+                } else if (poi.type === 'community') {
+                    communityMarkers.push(marker);
+                    if (showCommunities) {
+                        map.add(marker);
+                    }
+                }
+            });
+        }
+        
+        // 清除所有标记
+        function clearMarkers() {
+            // 清除学校标记
+            if (schoolMarkers.length > 0) {
+                map.remove(schoolMarkers);
+                schoolMarkers = [];
+            }
+            
+            // 清除小区标记
+            if (communityMarkers.length > 0) {
+                map.remove(communityMarkers);
+                communityMarkers = [];
+            }
+        }
+        
+        // 切换学校显示
+        function toggleSchools(show) {
+            if (show) {
+                map.add(schoolMarkers);
+            } else {
+                map.remove(schoolMarkers);
+            }
+        }
+        
+        // 切换小区显示
+        function toggleCommunities(show) {
+            if (show) {
+                map.add(communityMarkers);
+            } else {
+                map.remove(communityMarkers);
+            }
+        }
+        
+        // 更新兴趣点列表
+        function updatePOIList() {
+            const poiList = document.getElementById('poiList');
+            poiList.innerHTML = '';
+            
+            currentPOIs.forEach(poi => {
+                const li = document.createElement('li');
+                li.className = 'poi-item';
+                li.innerHTML = `<strong>${poi.type === 'school' ? '🏫' : '🏘️'} ${poi.name}</strong>`;
+                li.addEventListener('click', function() {
+                    // 地图中心定位到该POI
+                    map.setCenter(poi.location);
+                    map.setZoom(15);
+                    // 显示POI详情
+                    showPOIDetail(poi);
+                });
+                poiList.appendChild(li);
+            });
+        }
+        
+        // 显示POI详情
+        function showPOIDetail(poi) {
+            // 这里可以显示更详细的POI信息
+            // 例如：弹出信息窗口
+            const infoWindow = new AMap.InfoWindow({
+                content: `<div style="padding: 10px;"><h4>${poi.name}</h4><p>类型：${poi.type === 'school' ? '学校' : '小区'}</p></div>`,
+                offset: new AMap.Pixel(0, -30)
+            });
+            
+            infoWindow.open(map, poi.location);
+        }
+        
+        // 页面加载完成后初始化地图
+        window.addEventListener('DOMContentLoaded', async function() {
+            try {
+                await loadAMapAPI();
+                initMap();
+            } catch (error) {
+                console.error('Failed to load AMap API:', error);
+                document.getElementById('map').innerHTML = '<div style="text-align: center; padding: 2rem; color: red;">地图加载失败，请刷新页面重试</div>';
+            }
+        });
+    </script>
+</body>
+</html>
