@@ -165,8 +165,20 @@ function initDetailPage() {
             if ((currentDataType === 'daily' || currentDataType === 'patient') && dayFilter !== 'all') {
                 const targetDay = parseInt(dayFilter);
                 
-                // 计算项目在当月的日期：当月的第几天 = 天数 - (当月 - 1) * 31
-                const itemMonth = item.Month || Math.floor((item.Day - 1) / 31) + 1;
+                // 直接使用后端计算好的Month字段，避免前后端计算方式不一致
+                const itemMonth = item.Month;
+                
+                // 只有当月份匹配时，才进行天数过滤
+                if (monthFilter !== 'all') {
+                    const targetMonth = parseInt(monthFilter);
+                    
+                    // 如果月份不匹配，跳过
+                    if (itemMonth !== targetMonth) {
+                        return false;
+                    }
+                }
+                
+                // 计算项目在当月的日期：使用后端一致的计算方式（每月31天）
                 const dayInMonth = item.Day - (itemMonth - 1) * 31;
                 
                 if (dayInMonth !== targetDay) {
@@ -262,41 +274,41 @@ function initDetailPage() {
             headers = ['Date', 'Day', 'Week', 'Month', 'NewCustomers', 'PatientsSeen', 'RevenueTotal', 'Costs', 'Profit', 'CashFlowToday', 'Cash', 
                       'RevenueCard', 'RevenueTreatment', 'RevenueOrtho', 
                       'CashFlowCard', 'CashFlowTreatment', 'CashFlowOrtho', 
-                      'DoctorSalary', 'NurseSalary', 
+                      'DoctorSalary', 'NurseSalary', 'OpsSalary',
                       'TotalCustomers', 'TotalMembers'];
             // 每日数据需要合计的字段
             sumFields = ['NewCustomers', 'PatientsSeen', 'RevenueTotal', 'Costs', 'Profit', 'CashFlowToday', 
                        'RevenueCard', 'RevenueTreatment', 'RevenueOrtho', 
                        'CashFlowCard', 'CashFlowTreatment', 'CashFlowOrtho', 
-                       'DoctorSalary', 'NurseSalary'];
+                       'DoctorSalary', 'NurseSalary', 'OpsSalary'];
         } else if (currentDataType === 'weekly') {
-            // 每周数据：周数，接诊量，新客户数，总客户数，总营收，成本，利润，周现金流，现金余额，分类营收，分类现金流，人员工资
-            headers = ['Week', 'PatientsSeen', 'NewCustomers', 'TotalCustomers', 'RevenueTotal', 'Costs', 'Profit', 'CashFlowWeekly', 'Cash', 
+            // 每周数据：周数，周起始日期，周结束日期，接诊量，新客户数，总客户数，总营收，成本，利润，周现金流，现金余额，分类营收，分类现金流，人员工资
+            headers = ['Week', 'StartDate', 'EndDate', 'PatientsSeen', 'NewCustomers', 'TotalCustomers', 'RevenueTotal', 'Costs', 'Profit', 'CashFlowWeekly', 'Cash', 
                       'RevenueCard', 'RevenueTreatment', 'RevenueOrtho', 
                       'CashFlowCard', 'CashFlowTreatment', 'CashFlowOrtho', 
-                      'DoctorSalary', 'NurseSalary', 
+                      'DoctorSalary', 'NurseSalary', 'OpsSalary',
                       'TotalMembers'];
             // 每周数据需要合计的字段
             sumFields = ['PatientsSeen', 'NewCustomers', 'RevenueTotal', 'Costs', 'Profit', 'CashFlowWeekly', 
                        'RevenueCard', 'RevenueTreatment', 'RevenueOrtho', 
                        'CashFlowCard', 'CashFlowTreatment', 'CashFlowOrtho', 
-                       'DoctorSalary', 'NurseSalary'];
+                       'DoctorSalary', 'NurseSalary', 'OpsSalary'];
         } else if (currentDataType === 'monthly') {
             // 月度数据：月数，接诊量，新客户数，总客户数，总营收，成本，利润，月现金流，现金余额，分类营收，分类现金流，人员工资
             // 与周数据保持相同的字段顺序，只是时间粒度不同
             headers = ['Month', 'PatientsSeen', 'NewCustomers', 'TotalCustomers', 'RevenueTotal', 'Costs', 'Profit', 'CashFlowMonthly', 'Cash', 
                       'RevenueCard', 'RevenueTreatment', 'RevenueOrtho', 
                       'CashFlowCard', 'CashFlowTreatment', 'CashFlowOrtho', 
-                      'DoctorSalary', 'NurseSalary', 
+                      'DoctorSalary', 'NurseSalary', 'OpsSalary',
                       'TotalMembers'];
             // 月度数据需要合计的字段
             sumFields = ['PatientsSeen', 'NewCustomers', 'RevenueTotal', 'Costs', 'Profit', 'CashFlowMonthly', 
                        'RevenueCard', 'RevenueTreatment', 'RevenueOrtho', 
                        'CashFlowCard', 'CashFlowTreatment', 'CashFlowOrtho', 
-                       'DoctorSalary', 'NurseSalary'];
+                       'DoctorSalary', 'NurseSalary', 'OpsSalary'];
         } else {
-            // 患者明细：患者ID，日期，天，周，月，年龄，客户类型，行为，会员卡类型，金额，收入类型，现金流，成本，利润，描述
-            headers = ['PatientID', 'Date', 'Day', 'Week', 'Month', 'Age', 'Source', 'Action', 'CardType', 'Amount', 'RevenueType', 'CashFlow', 'Costs', 'Profit', 'Description'];
+            // 患者明细：患者ID，日期，天，周，月，星期几，年龄，客户类型，行为，会员卡类型，金额，收入类型，现金流，成本，利润，描述
+            headers = ['PatientID', 'Date', 'Day', 'Week', 'Month', 'Weekday', 'Age', 'Source', 'Action', 'CardType', 'Amount', 'RevenueType', 'CashFlow', 'Costs', 'Profit', 'Description'];
             // 患者明细不需要合计
             sumFields = [];
         }
@@ -396,6 +408,9 @@ function initDetailPage() {
                 'Date': '日期',
                 'Week': '周数',
                 'Month': '月数',
+                'Weekday': '星期几',
+                'StartDate': '周起始日期',
+                'EndDate': '周结束日期',
                 'StartDay': '开始天数',
                 'EndDay': '结束天数',
                 
@@ -425,8 +440,10 @@ function initDetailPage() {
                 'CurrentPediatricDoctors': '当前儿牙医生数',
                 'CurrentOrthoDoctors': '当前矫正医生数',
                 'CurrentNurses': '当前护士数',
+                'CurrentOps': '当前运营数',
                 'DoctorSalary': '医生工资',
                 'NurseSalary': '护士工资',
+                'OpsSalary': '运营工资',
                 
                 // 会员卡相关字段
                 'Card1YrTotal': '1年卡总收入',

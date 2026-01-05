@@ -115,6 +115,15 @@
                                         <input type="number" id="monthly_marketing" name="monthly_marketing" min="0" step="1000" value="10000" readonly>
                                     </div>
                                 </div>
+                                
+                                <div class="form-row">
+                                    <div class="field-with-unit short-field">
+                                        <div class="label-row">
+                                            <label for="monthly_other_costs">每月自定义投入（元）</label>
+                                        </div>
+                                        <input type="number" id="monthly_other_costs" name="monthly_other_costs" min="0" step="1000" value="5000">
+                                    </div>
+                                </div>
                                 <div class="field-with-unit">
                                     <div class="label-row">
                                         <label>诊所类型</label>
@@ -183,7 +192,7 @@
                                         <div class="label-row">
                                             <label for="nurse_base_salary">护士底薪（元）</label>
                                         </div>
-                                        <input type="number" id="nurse_base_salary" name="nurse_base_salary" min="0" step="1000" value="5000">
+                                        <input type="number" id="nurse_base_salary" name="nurse_base_salary" min="0" step="1000" value="7000">
                                     </div>
                                     
                                     <div class="field-with-unit short-field">
@@ -191,6 +200,39 @@
                                             <label for="nurse_commission_rate">护士提成比例</label>
                                         </div>
                                         <input type="number" id="nurse_commission_rate" name="nurse_commission_rate" min="0" max="1" step="0.01" value="0.03">
+                                    </div>
+                                </div>
+                                
+                                <!-- 运营人员配置 -->
+                                <div class="form-row">
+                                    <div class="field-with-unit short-field">
+                                        <div class="label-row">
+                                            <label for="ops_base_salary">运营底薪（元）</label>
+                                        </div>
+                                        <input type="number" id="ops_base_salary" name="ops_base_salary" min="0" step="1000" value="5000">
+                                    </div>
+                                    
+                                    <div class="field-with-unit short-field">
+                                        <div class="label-row">
+                                            <label for="ops_commission_rate">运营提成比例</label>
+                                        </div>
+                                        <input type="number" id="ops_commission_rate" name="ops_commission_rate" min="0" max="1" step="0.01" value="0.05">
+                                    </div>
+                                </div>
+                                
+                                <div class="form-row">
+                                    <div class="field-with-unit short-field">
+                                        <div class="label-row">
+                                            <label for="ops_guaranteed_salary">运营保底工资（元）</label>
+                                        </div>
+                                        <input type="number" id="ops_guaranteed_salary" name="ops_guaranteed_salary" min="0" step="1000" value="10000">
+                                    </div>
+                                    
+                                    <div class="field-with-unit short-field">
+                                        <div class="label-row">
+                                            <label for="doctor_threshold">增加医生阈值</label>
+                                        </div>
+                                        <input type="number" id="doctor_threshold" name="doctor_threshold" min="0" step="100" value="800">
                                     </div>
                                 </div>
                                 
@@ -278,6 +320,22 @@
                                             <label for="prob_card_5yr">新客办5年卡概率</label>
                                         </div>
                                         <input type="number" id="prob_card_5yr" name="prob_card_5yr" min="0" max="1" step="0.01" value="0.4">
+                                    </div>
+                                </div>
+                                
+                                <div class="form-row">
+                                    <div class="field-with-unit short-field">
+                                        <div class="label-row">
+                                            <label for="prob_renew_1yr">老客户续1年卡概率</label>
+                                        </div>
+                                        <input type="number" id="prob_renew_1yr" name="prob_renew_1yr" min="0" max="1" step="0.01" value="0.15">
+                                    </div>
+                                    
+                                    <div class="field-with-unit short-field">
+                                        <div class="label-row">
+                                            <label for="prob_renew_5yr">老客户续5年卡概率</label>
+                                        </div>
+                                        <input type="number" id="prob_renew_5yr" name="prob_renew_5yr" min="0" max="1" step="0.01" value="0.3">
                                     </div>
                                 </div>
                                 
