@@ -196,6 +196,28 @@ section h2 {
     gap: 8px;
 }
 
+/* 字段组样式 */
+.field-group {
+    margin-bottom: 24px;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+.group-title {
+    font-size: 14px;
+    color: #4a90e2;
+    margin-bottom: 16px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    background-color: rgba(74, 144, 226, 0.08);
+    border-left: 3px solid #4a90e2;
+    border-radius: 4px;
+    width: fit-content;
+}
+
 /* 字段组合布局 - 标签和输入框在同一行 */
 .field-with-unit {
     display: flex;
@@ -206,6 +228,8 @@ section h2 {
     max-width: calc(50% - 10px);
     box-sizing: border-box;
 }
+
+
 
 /* 短字段样式 - 固定宽度并排显示 */
 .field-with-unit.short-field {
@@ -388,11 +412,11 @@ section h2 {
 }
 
 .btn {
-    padding: 12px 24px;
+    padding: 8px 20px;
     border: none;
     border-radius: 8px;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 600;
     transition: all 0.2s ease;
     text-decoration: none;
@@ -401,6 +425,8 @@ section h2 {
     gap: 8px;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+    height: 36px;
+    box-sizing: border-box;
 }
 
 .btn:hover {
@@ -542,11 +568,39 @@ section h2 {
     margin-top: 8px;
 }
 
+.horizontal-radio {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-height: auto;
+}
+
+.horizontal-radio .label-row {
+    margin-bottom: 0;
+    margin-right: 0;
+    align-items: center;
+}
+
+.horizontal-radio .radio-group {
+    margin-top: 0;
+    align-items: center;
+    gap: 10px;
+}
+
+.horizontal-radio label {
+    font-weight: 600;
+    color: #333;
+    font-size: 13px;
+    margin-bottom: 0;
+    align-self: flex-start;
+}
+
 .radio-option {
     display: inline-block;
     position: relative;
     padding: 0;
     margin: 0;
+    align-self: center;
 }
 
 .radio-option input[type="radio"] {
@@ -558,16 +612,21 @@ section h2 {
 
 .radio-option span {
     display: inline-block;
-    padding: 10px 20px;
+    padding: 8px 18px;
     border: 2px solid #ddd;
     border-radius: 8px;
     background-color: #fff;
     color: #666;
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s ease;
     user-select: none;
+    height: 36px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .radio-option input[type="radio"]:checked + span {
@@ -580,6 +639,44 @@ section h2 {
 .radio-option span:hover {
     border-color: #4a90e2;
     color: #4a90e2;
+}
+
+/* 星期几开关样式 */
+.weekday-toggle-group {
+    display: flex;
+    gap: 8px;
+    margin-top: 6px;
+    flex-wrap: wrap;
+}
+
+.weekday-btn {
+    padding: 8px 16px;
+    border: 2px solid #ddd;
+    border-radius: 20px;
+    background-color: #fff;
+    color: #666;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 13px;
+    font-weight: 600;
+    height: 36px;
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 60px;
+}
+
+.weekday-btn:hover {
+    border-color: #4a90e2;
+    color: #4a90e2;
+}
+
+.weekday-btn[data-active="true"] {
+    background-color: #4a90e2;
+    color: #fff;
+    border-color: #4a90e2;
+    box-shadow: 0 2px 8px rgba(74, 144, 226, 0.3);
 }
 
 .alert.success {
@@ -698,15 +795,22 @@ section h2 {
     gap: 10px;
     margin-bottom: 20px;
     flex-wrap: wrap;
+    align-items: center;
 }
 
 .tab-btn {
-    padding: 10px 20px;
+    padding: 8px 20px;
     border: 1px solid #ddd;
-    border-radius: 5px 5px 0 0;
+    border-radius: 8px 8px 0 0;
     background-color: #f9f9f9;
     cursor: pointer;
-    transition: background-color 0.3s;
+    transition: all 0.3s ease;
+    font-size: 13px;
+    height: 36px;
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .tab-btn:hover {
@@ -775,15 +879,22 @@ section h2 {
     gap: 10px;
     margin-bottom: 20px;
     flex-wrap: wrap;
+    align-items: center;
 }
 
 .chart-btn {
-    padding: 10px 20px;
+    padding: 8px 20px;
     border: 1px solid #ddd;
-    border-radius: 5px;
+    border-radius: 8px;
     background-color: #fff;
     cursor: pointer;
-    transition: background-color 0.3s;
+    transition: all 0.3s ease;
+    font-size: 13px;
+    height: 36px;
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .chart-btn:hover {

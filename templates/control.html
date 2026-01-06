@@ -87,18 +87,20 @@
                                     </div>
                                 </div>
                                     
-                                <div class="field-with-unit short-field">
-                                    <div class="label-row">
-                                        <label for="rent_per_sqm_per_day">日租金（元/平米/天）</label>
+                                <div class="form-row">
+                                    <div class="field-with-unit short-field">
+                                        <div class="label-row">
+                                            <label for="rent_per_sqm_per_day">日租金（元/平米/天）</label>
+                                        </div>
+                                        <input type="number" id="rent_per_sqm_per_day" name="rent_per_sqm_per_day" min="0" step="0.1" value="3.5">
                                     </div>
-                                    <input type="number" id="rent_per_sqm_per_day" name="rent_per_sqm_per_day" min="0" step="0.1" value="3.5">
-                                </div>
-                                
-                                <div class="field-with-unit short-field">
-                                    <div class="label-row">
-                                        <label for="calculated_rent">计算每月房租（元）</label>
+                                    
+                                    <div class="field-with-unit short-field">
+                                        <div class="label-row">
+                                            <label for="calculated_rent">计算每月房租（元）</label>
+                                        </div>
+                                        <input type="number" id="calculated_rent" name="calculated_rent" min="0" step="100" value="63000" readonly>
                                     </div>
-                                    <input type="number" id="calculated_rent" name="calculated_rent" min="0" step="100" value="63000" readonly>
                                 </div>
                                 <div class="form-row">
                                     <div class="field-with-unit short-field">
@@ -124,19 +126,21 @@
                                         <input type="number" id="monthly_other_costs" name="monthly_other_costs" min="0" step="1000" value="5000">
                                     </div>
                                 </div>
-                                <div class="field-with-unit">
-                                    <div class="label-row">
-                                        <label>诊所类型</label>
-                                    </div>
-                                    <div class="radio-group">
-                                        <label class="radio-option">
-                                            <input type="radio" id="clinic_type_ortho" name="clinic_type" value="ortho" checked>
-                                            <span>做矫正</span>
-                                        </label>
-                                        <label class="radio-option">
-                                            <input type="radio" id="clinic_type_pediatric" name="clinic_type" value="pediatric">
-                                            <span>纯儿牙</span>
-                                        </label>
+                                <div class="form-row">
+                                    <div class="field-with-unit short-field horizontal-radio">
+                                        <div class="label-row">
+                                            <label>诊所类型</label>
+                                        </div>
+                                        <div class="radio-group">
+                                            <label class="radio-option">
+                                                <input type="radio" id="clinic_type_ortho" name="clinic_type" value="ortho" checked>
+                                                <span>做矫正</span>
+                                            </label>
+                                            <label class="radio-option">
+                                                <input type="radio" id="clinic_type_pediatric" name="clinic_type" value="pediatric">
+                                                <span>纯儿牙</span>
+                                            </label>
+                                        </div>
                                     </div>
                                 </div>
                                 </div>
@@ -148,162 +152,178 @@
                                 <h3>👥 人员配置</h3>
                             </div>
                             <div class="param-card-body">
-                                <div class="form-row">
-                                    <div class="field-with-unit short-field">
-                                        <div class="label-row">
-                                            <label for="num_pediatric_doctors">儿牙医生（人）</label>
+                                <!-- 人员数量配置 -->
+                                <div class="field-group">
+                                    <h4 class="group-title">👨‍⚕️ 人员数量</h4>
+                                    <div class="form-row">
+                                        <div class="field-with-unit short-field">
+                                            <div class="label-row">
+                                                <label for="num_pediatric_doctors">儿牙医生（人）</label>
+                                            </div>
+                                            <input type="number" id="num_pediatric_doctors" name="num_pediatric_doctors" min="0" max="10" value="1">
                                         </div>
-                                        <input type="number" id="num_pediatric_doctors" name="num_pediatric_doctors" min="0" max="10" value="1">
+                                        
+                                        <div class="field-with-unit short-field">
+                                            <div class="label-row">
+                                                <label for="num_ortho_doctors">矫正医生（人）</label>
+                                            </div>
+                                            <input type="number" id="num_ortho_doctors" name="num_ortho_doctors" min="0" max="10" value="0">
+                                        </div>
                                     </div>
                                     
-                                    <div class="field-with-unit short-field">
-                                        <div class="label-row">
-                                            <label for="num_ortho_doctors">矫正医生（人）</label>
+                                    <div class="form-row">
+                                        <div class="field-with-unit short-field">
+                                            <div class="label-row">
+                                                <label for="num_nurses">护士（人）</label>
+                                            </div>
+                                            <input type="number" id="num_nurses" name="num_nurses" min="1" max="20" value="4">
                                         </div>
-                                        <input type="number" id="num_ortho_doctors" name="num_ortho_doctors" min="0" max="10" value="0">
-                                    </div>
-                                </div>
-                                
-                                <div class="field-with-unit short-field">
-                                    <div class="label-row">
-                                        <label for="num_nurses">护士（人）</label>
-                                    </div>
-                                    <input type="number" id="num_nurses" name="num_nurses" min="1" max="20" value="4">
-                                </div>
-                                
-                                <div class="field-with-unit short-field">
-                                    <div class="label-row">
-                                        <label for="num_ops">运营（人）</label>
-                                    </div>
-                                    <input type="number" id="num_ops" name="num_ops" min="0" max="10" value="1">
-                                </div>
-                                
-                                <div class="field-with-unit short-field">
-                                    <div class="label-row">
-                                        <label>爬坡开关</label>
-                                    </div>
-                                    <div class="radio-group">
-                                        <label class="radio-option">
-                                            <input type="radio" id="enable_growth_curve_on" name="enable_growth_curve" value="true" checked>
-                                            <span>开启</span>
-                                        </label>
-                                        <label class="radio-option">
-                                            <input type="radio" id="enable_growth_curve_off" name="enable_growth_curve" value="false">
-                                            <span>关闭</span>
-                                        </label>
-                                    </div>
-                                </div>
-                                
-                                <div class="form-row">
-                                    <div class="field-with-unit short-field">
-                                        <div class="label-row">
-                                            <label for="doctor_guaranteed_months">医生保底时长（月）</label>
+                                        
+                                        <div class="field-with-unit short-field">
+                                            <div class="label-row">
+                                                <label for="num_ops">运营（人）</label>
+                                            </div>
+                                            <input type="number" id="num_ops" name="num_ops" min="0" max="10" value="1">
                                         </div>
-                                        <input type="number" id="doctor_guaranteed_months" name="doctor_guaranteed_months" min="0" max="120" value="12">
+                                    </div>
+                                </div>
+                                
+
+                                
+                                <!-- 医生配置 -->
+                                <div class="field-group">
+                                    <h4 class="group-title">👨‍⚕️ 医生配置</h4>
+                                    <div class="form-row">
+                                        <div class="field-with-unit short-field">
+                                            <div class="label-row">
+                                                <label for="doctor_base_salary">医生底薪（元）</label>
+                                            </div>
+                                            <input type="number" id="doctor_base_salary" name="doctor_base_salary" min="0" step="1000" value="10000">
+                                        </div>
+                                        
+                                        <div class="field-with-unit short-field">
+                                            <div class="label-row">
+                                                <label for="doctor_commission_rate">医生提成比例</label>
+                                            </div>
+                                            <input type="number" id="doctor_commission_rate" name="doctor_commission_rate" min="0" max="1" step="0.01" value="0.1">
+                                        </div>
                                     </div>
                                     
-                                    <div class="field-with-unit short-field">
-                                        <div class="label-row">
-                                            <label for="doctor_guaranteed_salary">医生保底工资（元）</label>
+                                    <div class="form-row">
+                                        <div class="field-with-unit short-field">
+                                            <div class="label-row">
+                                                <label for="doctor_guaranteed_salary">医生保底工资（元）</label>
+                                            </div>
+                                            <input type="number" id="doctor_guaranteed_salary" name="doctor_guaranteed_salary" min="0" step="1000" value="15000">
                                         </div>
-                                        <input type="number" id="doctor_guaranteed_salary" name="doctor_guaranteed_salary" min="0" step="1000" value="15000">
+                                        
+                                        <div class="field-with-unit short-field">
+                                            <div class="label-row">
+                                                <label for="doctor_guaranteed_months">医生保底时长（月）</label>
+                                            </div>
+                                            <input type="number" id="doctor_guaranteed_months" name="doctor_guaranteed_months" min="0" max="120" value="12">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-row">
+                                        <div class="field-with-unit short-field">
+                                            <div class="label-row">
+                                                <label for="doctor_threshold">增加医生阈值(达到XX会员时)</label>
+                                            </div>
+                                            <input type="number" id="doctor_threshold" name="doctor_threshold" min="0" step="100" value="800">
+                                        </div>
                                     </div>
                                 </div>
                                 
-                                <div class="form-row">
-                                    <div class="field-with-unit short-field">
-                                        <div class="label-row">
-                                            <label for="nurse_guaranteed_months">护士保底时长（月）</label>
+                                <!-- 护士配置 -->
+                                <div class="field-group">
+                                    <h4 class="group-title">👩‍⚕️ 护士配置</h4>
+                                    <div class="form-row">
+                                        <div class="field-with-unit short-field">
+                                            <div class="label-row">
+                                                <label for="nurse_base_salary">护士底薪（元）</label>
+                                            </div>
+                                            <input type="number" id="nurse_base_salary" name="nurse_base_salary" min="0" step="1000" value="7000">
                                         </div>
-                                        <input type="number" id="nurse_guaranteed_months" name="nurse_guaranteed_months" min="0" max="120" value="12">
+                                        
+                                        <div class="field-with-unit short-field">
+                                            <div class="label-row">
+                                                <label for="nurse_commission_rate">护士提成比例</label>
+                                            </div>
+                                            <input type="number" id="nurse_commission_rate" name="nurse_commission_rate" min="0" max="1" step="0.01" value="0.03">
+                                        </div>
                                     </div>
                                     
-                                    <div class="field-with-unit short-field">
-                                        <div class="label-row">
-                                            <label for="nurse_guaranteed_salary">护士保底工资（元）</label>
+                                    <div class="form-row">
+                                        <div class="field-with-unit short-field">
+                                            <div class="label-row">
+                                                <label for="nurse_guaranteed_salary">护士保底工资（元）</label>
+                                            </div>
+                                            <input type="number" id="nurse_guaranteed_salary" name="nurse_guaranteed_salary" min="0" step="1000" value="7000">
                                         </div>
-                                        <input type="number" id="nurse_guaranteed_salary" name="nurse_guaranteed_salary" min="0" step="1000" value="7000">
+                                        
+                                        <div class="field-with-unit short-field">
+                                            <div class="label-row">
+                                                <label for="nurse_guaranteed_months">护士保底时长（月）</label>
+                                            </div>
+                                            <input type="number" id="nurse_guaranteed_months" name="nurse_guaranteed_months" min="0" max="120" value="12">
+                                        </div>
                                     </div>
                                 </div>
                                 
-                                <div class="form-row">
-                                    <div class="field-with-unit short-field">
-                                        <div class="label-row">
-                                            <label for="doctor_base_salary">医生底薪（元）</label>
+                                <!-- 运营配置 -->
+                                <div class="field-group">
+                                    <h4 class="group-title">💼 运营配置</h4>
+                                    <div class="form-row">
+                                        <div class="field-with-unit short-field">
+                                            <div class="label-row">
+                                                <label for="ops_base_salary">运营底薪（元）</label>
+                                            </div>
+                                            <input type="number" id="ops_base_salary" name="ops_base_salary" min="0" step="1000" value="5000">
                                         </div>
-                                        <input type="number" id="doctor_base_salary" name="doctor_base_salary" min="0" step="1000" value="10000">
+                                        
+                                        <div class="field-with-unit short-field">
+                                            <div class="label-row">
+                                                <label for="ops_commission_rate">运营提成比例</label>
+                                            </div>
+                                            <input type="number" id="ops_commission_rate" name="ops_commission_rate" min="0" max="1" step="0.01" value="0.05">
+                                        </div>
                                     </div>
                                     
-                                    <div class="field-with-unit short-field">
-                                        <div class="label-row">
-                                            <label for="doctor_commission_rate">医生提成比例</label>
+                                    <div class="form-row">
+                                        <div class="field-with-unit short-field">
+                                            <div class="label-row">
+                                                <label for="ops_guaranteed_salary">运营保底工资（元）</label>
+                                            </div>
+                                            <input type="number" id="ops_guaranteed_salary" name="ops_guaranteed_salary" min="0" step="1000" value="10000">
                                         </div>
-                                        <input type="number" id="doctor_commission_rate" name="doctor_commission_rate" min="0" max="1" step="0.01" value="0.1">
+                                        
+                                        <div class="field-with-unit short-field">
+                                            <div class="label-row">
+                                                <label for="ops_guaranteed_months">运营保底时长（月）</label>
+                                            </div>
+                                            <input type="number" id="ops_guaranteed_months" name="ops_guaranteed_months" min="0" max="120" value="12">
+                                        </div>
                                     </div>
                                 </div>
                                 
-                                <div class="form-row">
-                                    <div class="field-with-unit short-field">
-                                        <div class="label-row">
-                                            <label for="nurse_base_salary">护士底薪（元）</label>
+                                <!-- 耗材比例 -->
+                                <div class="field-group">
+                                    <h4 class="group-title">🛠️ 耗材配置</h4>
+                                    <div class="form-row">
+                                        <div class="field-with-unit short-field">
+                                            <div class="label-row">
+                                                <label for="pediatric_material_ratio">儿牙耗材比例</label>
+                                            </div>
+                                            <input type="number" id="pediatric_material_ratio" name="pediatric_material_ratio" min="0" max="1" step="0.01" value="0.05">
                                         </div>
-                                        <input type="number" id="nurse_base_salary" name="nurse_base_salary" min="0" step="1000" value="7000">
-                                    </div>
-                                    
-                                    <div class="field-with-unit short-field">
-                                        <div class="label-row">
-                                            <label for="nurse_commission_rate">护士提成比例</label>
+                                        
+                                        <div class="field-with-unit short-field">
+                                            <div class="label-row">
+                                                <label for="ortho_material_ratio">矫正耗材比例</label>
+                                            </div>
+                                            <input type="number" id="ortho_material_ratio" name="ortho_material_ratio" min="0" max="1" step="0.01" value="0.30">
                                         </div>
-                                        <input type="number" id="nurse_commission_rate" name="nurse_commission_rate" min="0" max="1" step="0.01" value="0.03">
-                                    </div>
-                                </div>
-                                
-                                <!-- 运营人员配置 -->
-                                <div class="form-row">
-                                    <div class="field-with-unit short-field">
-                                        <div class="label-row">
-                                            <label for="ops_base_salary">运营底薪（元）</label>
-                                        </div>
-                                        <input type="number" id="ops_base_salary" name="ops_base_salary" min="0" step="1000" value="5000">
-                                    </div>
-                                    
-                                    <div class="field-with-unit short-field">
-                                        <div class="label-row">
-                                            <label for="ops_commission_rate">运营提成比例</label>
-                                        </div>
-                                        <input type="number" id="ops_commission_rate" name="ops_commission_rate" min="0" max="1" step="0.01" value="0.05">
-                                    </div>
-                                </div>
-                                
-                                <div class="form-row">
-                                    <div class="field-with-unit short-field">
-                                        <div class="label-row">
-                                            <label for="ops_guaranteed_salary">运营保底工资（元）</label>
-                                        </div>
-                                        <input type="number" id="ops_guaranteed_salary" name="ops_guaranteed_salary" min="0" step="1000" value="10000">
-                                    </div>
-                                    
-                                    <div class="field-with-unit short-field">
-                                        <div class="label-row">
-                                            <label for="doctor_threshold">增加医生阈值</label>
-                                        </div>
-                                        <input type="number" id="doctor_threshold" name="doctor_threshold" min="0" step="100" value="800">
-                                    </div>
-                                </div>
-                                
-                                <div class="form-row">
-                                    <div class="field-with-unit short-field">
-                                        <div class="label-row">
-                                            <label for="pediatric_material_ratio">儿牙耗材比例</label>
-                                        </div>
-                                        <input type="number" id="pediatric_material_ratio" name="pediatric_material_ratio" min="0" max="1" step="0.01" value="0.05">
-                                    </div>
-                                    
-                                    <div class="field-with-unit short-field">
-                                        <div class="label-row">
-                                            <label for="ortho_material_ratio">矫正耗材比例</label>
-                                        </div>
-                                        <input type="number" id="ortho_material_ratio" name="ortho_material_ratio" min="0" max="1" step="0.01" value="0.30">
                                     </div>
                                 </div>
                             </div>
@@ -336,6 +356,44 @@
                                             <label for="initial_members">初始会员数量（人）</label>
                                         </div>
                                         <input type="number" id="initial_members" name="initial_members" min="0" step="100" value="400">
+                                    </div>
+                                    
+                                    <div class="field-with-unit short-field horizontal-radio">
+                                        <div class="label-row">
+                                            <label>爬坡开关</label>
+                                        </div>
+                                        <div class="radio-group">
+                                            <label class="radio-option">
+                                                <input type="radio" id="enable_growth_curve_on" name="enable_growth_curve" value="true" checked>
+                                                <span>开启</span>
+                                            </label>
+                                            <label class="radio-option">
+                                                <input type="radio" id="enable_growth_curve_off" name="enable_growth_curve" value="false">
+                                                <span>关闭</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="field-group">
+                                    <h4 class="group-title">📅 开诊日配置</h4>
+                                    <div class="form-row">
+                                        <div class="field-with-unit short-field">
+                                            <div class="label-row">
+                                                <label>选择开诊的星期几</label>
+                                            </div>
+                                            <div class="weekday-toggle-group">
+                                                <button type="button" class="weekday-btn" data-day="周一" data-active="true">周一</button>
+                                                <button type="button" class="weekday-btn" data-day="周二" data-active="false">周二</button>
+                                                <button type="button" class="weekday-btn" data-day="周三" data-active="true">周三</button>
+                                                <button type="button" class="weekday-btn" data-day="周四" data-active="true">周四</button>
+                                                <button type="button" class="weekday-btn" data-day="周五" data-active="true">周五</button>
+                                                <button type="button" class="weekday-btn" data-day="周六" data-active="true">周六</button>
+                                                <button type="button" class="weekday-btn" data-day="周日" data-active="true">周日</button>
+                                            </div>
+                                            <!-- 隐藏的输入字段，用于存储开诊日配置 -->
+                                            <input type="hidden" id="open_days" name="open_days" value='{"周一": true, "周二": false, "周三": true, "周四": true, "周五": true, "周六": true, "周日": true}'>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

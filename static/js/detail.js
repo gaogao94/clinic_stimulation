@@ -74,7 +74,7 @@ function initDetailPage() {
     setInterval(loadData, 3000);
     
     // 加载数据
-            function loadData() {
+    function loadData() {
         let endpoint;
         
         // 根据数据类型选择不同的API端点
@@ -165,21 +165,20 @@ function initDetailPage() {
             if ((currentDataType === 'daily' || currentDataType === 'patient') && dayFilter !== 'all') {
                 const targetDay = parseInt(dayFilter);
                 
-                // 直接使用后端计算好的Month字段，避免前后端计算方式不一致
-                const itemMonth = item.Month;
+                // 直接使用模拟天数减去前几个月的天数，得到当月天数
+                // 这里使用与后端一致的每月31天计算
+                const monthsPassed = item.Month - 1;
+                const dayInMonth = item.Day - monthsPassed * 31;
                 
                 // 只有当月份匹配时，才进行天数过滤
                 if (monthFilter !== 'all') {
                     const targetMonth = parseInt(monthFilter);
                     
                     // 如果月份不匹配，跳过
-                    if (itemMonth !== targetMonth) {
+                    if (item.Month !== targetMonth) {
                         return false;
                     }
                 }
-                
-                // 计算项目在当月的日期：使用后端一致的计算方式（每月31天）
-                const dayInMonth = item.Day - (itemMonth - 1) * 31;
                 
                 if (dayInMonth !== targetDay) {
                     return false;
@@ -228,8 +227,29 @@ function initDetailPage() {
                         option.textContent = `第 ${i} 周`;
                         filterWeek.appendChild(option);
                     }
-                } else {
-                    // 对于日数据和患者明细，显示月数、周数和天数过滤
+                } else if (currentDataType === 'patient') {
+                    // 对于患者明细，显示月数、周数和天数过滤
+                    filterWeek.style.display = 'inline-block';
+                    filterDay.style.display = 'inline-block';
+                    
+                    // 加载周数选项
+                    for (let i = 1; i <= state.current_week; i++) {
+                        const option = document.createElement('option');
+                        option.value = i;
+                        option.textContent = `第 ${i} 周`;
+                        filterWeek.appendChild(option);
+                    }
+                    
+                    // 加载天数选项，最多到31天
+                    const maxDays = Math.min(state.current_day, 31);
+                    for (let i = 1; i <= maxDays; i++) {
+                        const option = document.createElement('option');
+                        option.value = i;
+                        option.textContent = `第 ${i} 日`;
+                        filterDay.appendChild(option);
+                    }
+                } else if (currentDataType === 'daily') {
+                    // 对于日数据，显示月数、周数和天数过滤
                     filterWeek.style.display = 'inline-block';
                     filterDay.style.display = 'inline-block';
                     
@@ -375,6 +395,7 @@ function initDetailPage() {
                     if (amountFields.includes(header)) {
                         value = value.toFixed(2);
                     } else {
+                        // 人数等数据保留整数
                         value = Math.round(value);
                     }
                     html += `<td><strong>${value}</strong></td>`;

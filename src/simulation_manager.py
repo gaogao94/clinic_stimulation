@@ -38,6 +38,7 @@ class SimulationManager:
             'num_ops': 1,  # 运营数量（人）
             'doctor_guaranteed_months': 12,  # 医生保底时长（月）
             'nurse_guaranteed_months': 12,  # 护士保底时长（月）
+            'ops_guaranteed_months': 12,  # 运营保底时长（月）
             'enable_growth_curve': True,  # 是否启用患者流量爬坡
             'daily_new_leads_base': 3,  # 每日新客流入（人）
             'initial_members': 400,  # 初始会员数量，默认400人
@@ -60,19 +61,20 @@ class SimulationManager:
             'monthly_marketing': 10000,  # 每月市场费用：10000元（固定）
             'monthly_other_costs': 0,  # 每月其他成本：0元（固定）
             'doctor_base_salary': 15000,  # 医生底薪（元）
-            'doctor_guaranteed_salary': 15000,  # 医生保底工资（元）
             'doctor_commission_rate': 0.15,  # 医生提成比例
+            'doctor_guaranteed_salary': 15000,  # 医生保底工资（元）
             'nurse_base_salary': 7000,  # 护士底薪（元）
-            'nurse_guaranteed_salary': 7000,  # 护士保底工资（元）
             'nurse_commission_rate': 0.03,  # 护士提成比例
+            'nurse_guaranteed_salary': 7000,  # 护士保底工资（元）
             'ops_base_salary': 5000,  # 运营底薪（元）
-            'ops_guaranteed_salary': 10000,  # 运营保底工资（元）
             'ops_commission_rate': 0.05,  # 运营提成比例
+            'ops_guaranteed_salary': 10000,  # 运营保底工资（元）
             'pediatric_material_ratio': 0.05,  # 儿牙耗材比例
             'ortho_material_ratio': 0.30,  # 矫正耗材比例
             'card_revenue_recognition_ratio': 0.2,  # 会员卡办卡当日确认营收比例，默认20%
             'doctor_threshold': 800,  # 增加医生阈值：平均单医生会员总数>800时增加儿牙医生
-            'clinic_type': 'ortho'  # 诊所类型：'ortho'做矫正，'pediatric'纯儿牙
+            'clinic_type': 'ortho',  # 诊所类型：'ortho'做矫正，'pediatric'纯儿牙
+            'open_days': {'周一': True, '周二': False, '周三': True, '周四': True, '周五': True, '周六': True, '周日': True}  # 开诊日配置
         }
         
         self.params = self.default_params.copy()  # 初始化params为默认值
@@ -257,6 +259,58 @@ class SimulationManager:
         """运行单日模拟"""
         day = self.state['current_day'] + 1  # 当前模拟天数
         self.state['current_day'] = day  # 更新当前天数
+        
+        # 获取当天的日期信息
+        date_info = self.get_date_info(day)
+        weekday_name = date_info['weekday_name']
+        
+        # 检查当天是否开诊
+        if not self.params['open_days'][weekday_name]:
+            # 不开诊，跳过当天模拟，但仍记录日期信息
+            # 获取当前总客户数和总会员数（如果不存在，初始化为初始会员数）
+            total_customers = self.state.get('total_customers', self.params['initial_members'])
+            total_members = self.state.get('total_members', self.params['initial_members'])
+            
+            self.state['daily_history'].append({
+                'Day': day,
+                'Week': (day - 1) // 7 + 1,
+                'Month': (day - 1) // 30 + 1,
+                'Year': 2023 + (day - 1) // 365,
+                'Date': date_info['date'].strftime('%Y-%m-%d'),
+                'Weekday': weekday_name,
+                'NewCustomers': 0,
+                'PatientsSeen': 0,
+                'TotalCustomers': total_customers,
+                'CashFlowToday': 0,
+                'Cash': self.state['current_cash'],
+                'RevenueTotal': 0,
+                'RevenueTreatment': 0,
+                'RevenueOrtho': 0,
+                'RevenueCard': 0,
+                'RevenueCardImmediate': 0,
+                'RevenueCardAmortized': 0,
+                'CashNewCard': 0,
+                'CashRenewCard': 0,
+                'CashTreatment': 0,
+                'CashOrtho': 0,
+                'DoctorSalary': 0,
+                'NurseSalary': 0,
+                'OpsSalary': 0,
+                'TotalMembers': total_members,
+                'Card1YrTotal': self.state['card_1yr_total'],
+                'Card5YrTotal': self.state['card_5yr_total'],
+                'MonthlyCardRevenue': self.state['monthly_card_revenue'],
+                'CardContractLiability': self.state['card_contract_liability'],
+                'ClinicType': self.params['clinic_type'],
+                'Source': 'native',
+                'CurrentPediatricDoctors': self.state['current_pediatric_doctors'],
+                'CurrentOrthoDoctors': self.state['current_ortho_doctors'],
+                'CurrentNurses': self.state['current_nurses'],
+                'CurrentOps': self.state['current_ops'],
+                'Costs': 0,
+                'Profit': 0
+            })
+            return
         
         # 今日财务数据初始化
         cash_today = 0  # 今日现金流
@@ -985,7 +1039,7 @@ class SimulationManager:
             'Cash': weekly_data[-1]['Cash'],  # 周末现金余额
             
             # 分类营收
-            'RevenueCard': sum(d['RevenueCard'] for d in weekly_data),  # 周卡类营收
+            'RevenueCard': sum(d.get('RevenueCard', 0) for d in weekly_data),  # 周卡类营收
             'RevenueTreatment': sum(d['RevenueTreatment'] for d in weekly_data),  # 周治疗营收
             'RevenueOrtho': sum(d['RevenueOrtho'] for d in weekly_data),  # 周矫正营收
             
@@ -995,9 +1049,9 @@ class SimulationManager:
             'ProfitOrtho': sum(d.get('ProfitOrtho', 0) for d in weekly_data),  # 周矫正利润
             
             # 分类现金流
-            'CashFlowCard': sum(d['CashFlowCard'] for d in weekly_data),  # 周卡类现金流
-            'CashFlowTreatment': sum(d['CashFlowTreatment'] for d in weekly_data),  # 周治疗现金流
-            'CashFlowOrtho': sum(d['CashFlowOrtho'] for d in weekly_data),  # 周矫正现金流
+            'CashFlowCard': sum(d.get('CashFlowCard', 0) for d in weekly_data),  # 周卡类现金流
+            'CashFlowTreatment': sum(d.get('CashFlowTreatment', 0) for d in weekly_data),  # 周治疗现金流
+            'CashFlowOrtho': sum(d.get('CashFlowOrtho', 0) for d in weekly_data),  # 周矫正现金流
             
             # 人员相关
             'CurrentPediatricDoctors': weekly_data[-1]['CurrentPediatricDoctors'],  # 当前儿牙医生数
@@ -1069,9 +1123,9 @@ class SimulationManager:
                 'Cash': month_days[-1]['Cash'],  # 月末现金余额
                 
                 # 分类营收
-                'RevenueCard': sum(d['RevenueCard'] for d in month_days),  # 月卡类营收
-                'RevenueTreatment': sum(d['RevenueTreatment'] for d in month_days),  # 月治疗营收
-                'RevenueOrtho': sum(d['RevenueOrtho'] for d in month_days),  # 月矫正营收
+                'RevenueCard': sum(d.get('RevenueCard', 0) for d in month_days),  # 月卡类营收
+                'RevenueTreatment': sum(d.get('RevenueTreatment', 0) for d in month_days),  # 月治疗营收
+                'RevenueOrtho': sum(d.get('RevenueOrtho', 0) for d in month_days),  # 月矫正营收
                 
                 # 分类利润
                 'ProfitCard': sum(d.get('ProfitCard', 0) for d in month_days),  # 月卡类利润
@@ -1079,9 +1133,9 @@ class SimulationManager:
                 'ProfitOrtho': sum(d.get('ProfitOrtho', 0) for d in month_days),  # 月矫正利润
                 
                 # 分类现金流
-                'CashFlowCard': sum(d['CashFlowCard'] for d in month_days),  # 月卡类现金流
-                'CashFlowTreatment': sum(d['CashFlowTreatment'] for d in month_days),  # 月治疗现金流
-                'CashFlowOrtho': sum(d['CashFlowOrtho'] for d in month_days),  # 月矫正现金流
+                'CashFlowCard': sum(d.get('CashFlowCard', 0) for d in month_days),  # 月卡类现金流
+                'CashFlowTreatment': sum(d.get('CashFlowTreatment', 0) for d in month_days),  # 月治疗现金流
+                'CashFlowOrtho': sum(d.get('CashFlowOrtho', 0) for d in month_days),  # 月矫正现金流
                 
                 # 人员工资（人均）
                 'DoctorSalary': avg_doctor_salary,  # 月人均医生工资

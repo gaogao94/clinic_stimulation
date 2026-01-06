@@ -23,6 +23,9 @@ function initControlPage() {
     // 添加房租计算功能
     addRentCalculation();
     
+    // 添加星期几开关功能
+    addWeekdayToggle();
+    
     // 表单提交事件 - 参数更新
     paramsForm.addEventListener('change', function(e) {
         // 显示参数已更改的警告
@@ -90,6 +93,18 @@ function loadCurrentParams() {
                     radioButtons.forEach(radio => {
                         radio.checked = (radio.value === value);
                     });
+                } else if (key === 'open_days') {
+                    // 处理开诊日配置
+                    const openDaysInput = document.getElementById('open_days');
+                    if (openDaysInput) {
+                        openDaysInput.value = JSON.stringify(value);
+                        // 更新星期几按钮状态
+                        const weekdayBtns = document.querySelectorAll('.weekday-btn');
+                        weekdayBtns.forEach(btn => {
+                            const day = btn.dataset.day;
+                            btn.dataset.active = value[day];
+                        });
+                    }
                 } else {
                     // 处理普通字段
                     const element = document.getElementById(key);
@@ -135,8 +150,13 @@ function resetSimulation() {
         if (key === 'calculated_rent') {
             continue;
         }
-        // 转换数值类型
-        params[key] = isNaN(value) ? value : parseFloat(value);
+        // 处理开诊日配置
+        if (key === 'open_days') {
+            params[key] = JSON.parse(value);
+        } else {
+            // 转换数值类型
+            params[key] = isNaN(value) ? value : parseFloat(value);
+        }
     }
     
     // 发送重置请求
@@ -180,6 +200,46 @@ function runNextWeek() {
         console.error('Error running next week:', error);
         showAlert('运行下一周失败：' + error.message, 'error');
     });
+}
+
+// 添加星期几开关功能
+function addWeekdayToggle() {
+    const weekdayBtns = document.querySelectorAll('.weekday-btn');
+    const openDaysInput = document.getElementById('open_days');
+    
+    // 初始化开诊日配置
+    let openDays = JSON.parse(openDaysInput.value);
+    
+    // 更新按钮状态
+    function updateButtons() {
+        weekdayBtns.forEach(btn => {
+            const day = btn.dataset.day;
+            btn.dataset.active = openDays[day];
+        });
+    }
+    
+    // 更新隐藏输入字段
+    function updateHiddenInput() {
+        openDaysInput.value = JSON.stringify(openDays);
+        // 触发表单变化事件
+        openDaysInput.dispatchEvent(new Event('change'));
+    }
+    
+    // 为每个星期几按钮添加点击事件
+    weekdayBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const day = this.dataset.day;
+            // 切换开诊状态
+            openDays[day] = !openDays[day];
+            // 更新按钮状态
+            this.dataset.active = openDays[day];
+            // 更新隐藏输入字段
+            updateHiddenInput();
+        });
+    });
+    
+    // 初始化按钮状态
+    updateButtons();
 }
 
 // 显示警告信息
