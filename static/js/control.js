@@ -46,16 +46,16 @@ function initControlPage() {
 }
 
 // 定义全局变量存储DOM元素
-let buildingArea, rentPerSqmPerDay, calculatedRent;
+let buildingArea, occupancyRate, rentPerSqmPerDay, calculatedRent;
 
 // 计算房租的函数（全局作用域）
 function calculateRent() {
     const area = parseFloat(buildingArea.value);
+    const rate = parseFloat(occupancyRate.value);
     const rent = parseFloat(rentPerSqmPerDay.value);
     
-    // 计算每月房租：建筑面积 × 日租金 × 31天
-    // 前端简化计算，使用31天作为每月天数
-    const monthlyRent = area * rent * 31;
+    // 计算每月房租：建筑面积 × 得房率 × 日租金 × 31天
+    const monthlyRent = area * rate * rent * 31;
     calculatedRent.value = Math.round(monthlyRent);
 }
 
@@ -63,10 +63,13 @@ function calculateRent() {
 function addRentCalculation() {
     // 获取相关DOM元素并存储到全局变量
     buildingArea = document.getElementById('building_area');
+    occupancyRate = document.getElementById('occupancy_rate');
     rentPerSqmPerDay = document.getElementById('rent_per_sqm_per_day');
     calculatedRent = document.getElementById('calculated_rent');
     
-    // 当租金输入变化时重新计算
+    // 当任何相关字段变化时重新计算
+    buildingArea.addEventListener('input', calculateRent);
+    occupancyRate.addEventListener('input', calculateRent);
     rentPerSqmPerDay.addEventListener('input', calculateRent);
     
     // 初始计算

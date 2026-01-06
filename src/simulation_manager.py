@@ -35,6 +35,10 @@ class SimulationManager:
             'num_pediatric_doctors': 0,  # 儿牙医生数量（人）
             'num_ortho_doctors': 1,  # 矫正医生数量（人）
             'num_nurses': 4,  # 护士数量（人）
+            'num_ops': 1,  # 运营数量（人）
+            'doctor_guaranteed_months': 12,  # 医生保底时长（月）
+            'nurse_guaranteed_months': 12,  # 护士保底时长（月）
+            'enable_growth_curve': True,  # 是否启用患者流量爬坡
             'daily_new_leads_base': 3,  # 每日新客流入（人）
             'initial_members': 400,  # 初始会员数量，默认400人
             'prob_card_1yr': 0.2,  # 新客办1年卡概率
@@ -147,7 +151,7 @@ class SimulationManager:
             'current_pediatric_doctors': self.params['num_pediatric_doctors'],  # 当前儿牙医生数
             'current_ortho_doctors': self.params['num_ortho_doctors'],  # 当前矫正医生数
             'current_nurses': self.params['num_nurses'],  # 当前护士数
-            'current_ops': 1,  # 当前运营人数，默认为1人
+            'current_ops': self.params['num_ops'],  # 当前运营人数
             'card_1yr_total': 0,  # 1年卡总收入
             'card_5yr_total': 0,  # 5年卡总收入
             'monthly_card_revenue': 0,  # 月度卡类分摊收入
@@ -380,7 +384,13 @@ class SimulationManager:
                         p.next_appointment_day = day + 30  # 未赴约，推迟30天再联系
         
         # 2. 获取新初诊客户
-        growth_factor = min(1.0, 0.4 + (day / 180) * 0.6)  # 增长因子，随时间递增，上限为1.0
+        # 根据是否启用爬坡计算增长因子
+        if self.params.get('enable_growth_curve', True):
+            # 启用爬坡：增长因子随时间递增，上限为1.0
+            growth_factor = min(1.0, 0.4 + (day / 180) * 0.6)
+        else:
+            # 禁用爬坡：增长因子始终为1.0
+            growth_factor = 1.0
         # 生成每日新客数量，基于高斯分布
         num_new_leads = max(0, int(random.gauss(self.params['daily_new_leads_base'], 1) * growth_factor))
         new_customers = 0  # 初始化为0，实际新客户数
@@ -758,17 +768,20 @@ class SimulationManager:
             doctor_commission_rate = self.params['doctor_commission_rate']  # 医生提成比例
             doctor_base_salary = self.params['doctor_base_salary']  # 医生底薪
             doctor_guaranteed_salary = self.params['doctor_guaranteed_salary']  # 医生保底工资
+            doctor_guaranteed_months = self.params['doctor_guaranteed_months']  # 医生保底时长（月）
             
             # 儿牙医生薪酬
             pediatric_doctor_commission = monthly_pediatric_revenue * doctor_commission_rate  # 儿牙医生提成
             pediatric_doctor_total = doctor_base_salary + pediatric_doctor_commission  # 儿牙医生总薪酬
-            if day <= 365:  # 第一年有保底
+            # 保底期内有保底
+            if day <= doctor_guaranteed_months * 30:  # 转换为天数比较
                 pediatric_doctor_total = max(pediatric_doctor_total, doctor_guaranteed_salary)  # 取提成和保底的最大值
             
             # 矫正医生薪酬
             ortho_doctor_commission = monthly_ortho_revenue * doctor_commission_rate  # 矫正医生提成
             ortho_doctor_total = doctor_base_salary + ortho_doctor_commission  # 矫正医生总薪酬
-            if day <= 365:  # 第一年有保底
+            # 保底期内有保底
+            if day <= doctor_guaranteed_months * 30:  # 转换为天数比较
                 ortho_doctor_total = max(ortho_doctor_total, doctor_guaranteed_salary)  # 取提成和保底的最大值
             
             # 使用当前人员数量计算工资
@@ -779,10 +792,13 @@ class SimulationManager:
             nurse_commission_rate = self.params['nurse_commission_rate']  # 护士提成比例
             nurse_base_salary = self.params['nurse_base_salary']  # 护士底薪
             nurse_guaranteed_salary = self.params['nurse_guaranteed_salary']  # 护士保底工资
+            nurse_guaranteed_months = self.params['nurse_guaranteed_months']  # 护士保底时长（月）
             
             nurse_commission = monthly_revenue * nurse_commission_rate  # 护士提成
             nurse_individual = nurse_base_salary + nurse_commission  # 单个护士总薪酬
-            nurse_individual = max(nurse_individual, nurse_guaranteed_salary)  # 取提成和保底的最大值
+            # 保底期内有保底
+            if day <= nurse_guaranteed_months * 30:  # 转换为天数比较
+                nurse_individual = max(nurse_individual, nurse_guaranteed_salary)  # 取提成和保底的最大值
             nurse_salary_today = self.state['current_nurses'] * nurse_individual  # 总护士工资
             
             # 运营薪酬计算

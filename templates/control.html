@@ -76,14 +76,14 @@
                                         <div class="label-row">
                                             <label for="building_area">建筑面积（平米）</label>
                                         </div>
-                                        <input type="number" id="building_area" name="building_area" min="0" step="1" value="143" readonly>
+                                        <input type="number" id="building_area" name="building_area" min="0" step="1" value="143">
                                     </div>
                                     
                                     <div class="field-with-unit short-field">
                                         <div class="label-row">
                                             <label for="occupancy_rate">得房率</label>
                                         </div>
-                                        <input type="number" id="occupancy_rate" name="occupancy_rate" min="0" max="1" step="0.01" value="0.7" readonly>
+                                        <input type="number" id="occupancy_rate" name="occupancy_rate" min="0" max="1" step="0.01" value="0.7">
                                     </div>
                                 </div>
                                     
@@ -105,14 +105,14 @@
                                         <div class="label-row">
                                             <label for="monthly_utilities">每月水电费（元）</label>
                                         </div>
-                                        <input type="number" id="monthly_utilities" name="monthly_utilities" min="0" step="100" value="2000" readonly>
+                                        <input type="number" id="monthly_utilities" name="monthly_utilities" min="0" step="100" value="2000">
                                     </div>
                                     
                                     <div class="field-with-unit short-field">
                                         <div class="label-row">
                                             <label for="monthly_marketing">每月市场费用（元）</label>
                                         </div>
-                                        <input type="number" id="monthly_marketing" name="monthly_marketing" min="0" step="1000" value="10000" readonly>
+                                        <input type="number" id="monthly_marketing" name="monthly_marketing" min="0" step="1000" value="10000">
                                     </div>
                                 </div>
                                 
@@ -169,6 +169,61 @@
                                         <label for="num_nurses">护士（人）</label>
                                     </div>
                                     <input type="number" id="num_nurses" name="num_nurses" min="1" max="20" value="4">
+                                </div>
+                                
+                                <div class="field-with-unit short-field">
+                                    <div class="label-row">
+                                        <label for="num_ops">运营（人）</label>
+                                    </div>
+                                    <input type="number" id="num_ops" name="num_ops" min="0" max="10" value="1">
+                                </div>
+                                
+                                <div class="field-with-unit short-field">
+                                    <div class="label-row">
+                                        <label>爬坡开关</label>
+                                    </div>
+                                    <div class="radio-group">
+                                        <label class="radio-option">
+                                            <input type="radio" id="enable_growth_curve_on" name="enable_growth_curve" value="true" checked>
+                                            <span>开启</span>
+                                        </label>
+                                        <label class="radio-option">
+                                            <input type="radio" id="enable_growth_curve_off" name="enable_growth_curve" value="false">
+                                            <span>关闭</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-row">
+                                    <div class="field-with-unit short-field">
+                                        <div class="label-row">
+                                            <label for="doctor_guaranteed_months">医生保底时长（月）</label>
+                                        </div>
+                                        <input type="number" id="doctor_guaranteed_months" name="doctor_guaranteed_months" min="0" max="120" value="12">
+                                    </div>
+                                    
+                                    <div class="field-with-unit short-field">
+                                        <div class="label-row">
+                                            <label for="doctor_guaranteed_salary">医生保底工资（元）</label>
+                                        </div>
+                                        <input type="number" id="doctor_guaranteed_salary" name="doctor_guaranteed_salary" min="0" step="1000" value="15000">
+                                    </div>
+                                </div>
+                                
+                                <div class="form-row">
+                                    <div class="field-with-unit short-field">
+                                        <div class="label-row">
+                                            <label for="nurse_guaranteed_months">护士保底时长（月）</label>
+                                        </div>
+                                        <input type="number" id="nurse_guaranteed_months" name="nurse_guaranteed_months" min="0" max="120" value="12">
+                                    </div>
+                                    
+                                    <div class="field-with-unit short-field">
+                                        <div class="label-row">
+                                            <label for="nurse_guaranteed_salary">护士保底工资（元）</label>
+                                        </div>
+                                        <input type="number" id="nurse_guaranteed_salary" name="nurse_guaranteed_salary" min="0" step="1000" value="7000">
+                                    </div>
                                 </div>
                                 
                                 <div class="form-row">
